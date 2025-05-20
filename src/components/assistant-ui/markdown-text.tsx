@@ -12,15 +12,25 @@ import {
 } from '@assistant-ui/react-markdown'
 import { CheckIcon, CopyIcon } from 'lucide-react'
 import { type FC, memo, useState } from 'react'
+
+// plugins
 import remarkGfm from 'remark-gfm'
+import rehypeMermaid from 'rehype-mermaid'
+
+// remark-mermaid is not typed
+// // @ts-expect-error remark-mermaid is not typed
+// import remarkMermaid from 'remark-mermaid'
 
 import { TooltipIconButton } from '@/components/assistant-ui/tooltip-icon-button'
 import { cn } from '@/lib/utils'
 import { SyntaxHighlighter } from '@/components/assistant-ui/shiki-highlighter'
 
 const MarkdownTextImpl = () => {
+  // TODO: Test importing rehypeMermaid or remarkMermaid here and you'll discover the issue, whether importing just one or both
   return (
     <MarkdownTextPrimitive
+      // remarkPlugins={[remarkGfm, remarkMath, remarkMermaid]}
+      // rehypePlugins={[rehypeKatex, rehypeMermaid]}
       remarkPlugins={[remarkGfm, remarkMath]}
       rehypePlugins={[rehypeKatex]}
       className='aui-md'
