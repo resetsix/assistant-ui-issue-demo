@@ -3,7 +3,7 @@
 import '@assistant-ui/react-markdown/styles/dot.css'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
-
+import { Mermaid } from '@theguild/remark-mermaid/mermaid'
 import {
   type CodeHeaderProps,
   MarkdownTextPrimitive,
@@ -13,24 +13,16 @@ import {
 import { CheckIcon, CopyIcon } from 'lucide-react'
 import { type FC, memo, useState } from 'react'
 
-// plugins
 import remarkGfm from 'remark-gfm'
-import rehypeMermaid from 'rehype-mermaid'
 
-// remark-mermaid is not typed
-// // @ts-expect-error remark-mermaid is not typed
-// import remarkMermaid from 'remark-mermaid'
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { SyntaxHighlighter } from '@/components/assistant-ui/shiki-highlighter'
 import { TooltipIconButton } from '@/components/assistant-ui/tooltip-icon-button'
 import { cn } from '@/lib/utils'
-import { SyntaxHighlighter } from '@/components/assistant-ui/shiki-highlighter'
 
 const MarkdownTextImpl = () => {
-  // TODO: Test importing rehypeMermaid or remarkMermaid here and you'll discover the issue, whether importing just one or both
   return (
     <MarkdownTextPrimitive
-      // remarkPlugins={[remarkGfm, remarkMath, remarkMermaid]}
-      // rehypePlugins={[rehypeKatex, rehypeMermaid]}
       remarkPlugins={[remarkGfm, remarkMath]}
       rehypePlugins={[rehypeKatex]}
       className='aui-md'
@@ -79,7 +71,6 @@ const useCopyToClipboard = ({
 }
 
 const defaultComponents = memoizeMarkdownComponents({
-  SyntaxHighlighter: SyntaxHighlighter,
   h1: ({ className, ...props }) => (
     <h1
       className={cn('mb-8 scroll-m-20 text-4xl font-extrabold tracking-tight last:mb-0', className)}
@@ -182,6 +173,11 @@ const defaultComponents = memoizeMarkdownComponents({
   ),
   code: function Code({ className, ...props }) {
     const isCodeBlock = useIsMarkdownCodeBlock()
+
+    if (isCodeBlock && className === 'language-mermaid') {
+      return <Mermaid chart={props.children as string} />
+    }
+
     return (
       <code
         className={cn(!isCodeBlock && 'bg-muted rounded border font-semibold', className)}
@@ -189,5 +185,7 @@ const defaultComponents = memoizeMarkdownComponents({
       />
     )
   },
+  // SyntaxHighlighter Will cause mermaid to fail
+  // SyntaxHighlighter,
   CodeHeader,
 })

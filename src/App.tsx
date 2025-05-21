@@ -2,7 +2,6 @@ import { Thread } from '@/components/assistant-ui/thread'
 import { AssistantRuntimeProvider } from '@assistant-ui/react'
 import { useChatRuntime } from '@assistant-ui/react-ai-sdk'
 
-import './App.css'
 import { data } from './data'
 
 function App() {
